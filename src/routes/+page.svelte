@@ -45,11 +45,11 @@
 	];
 
 	// Charts embedded in the article, shown after the given paragraph.
-	const FIGURES: Record<number, { src: string; alt: string }> = {
-		2: { src: 'figures/chicken-vs-beef.png', alt: 'Chicken vs. beef: size of each fast-food category, with McDonald’s share' },
-		8: { src: 'figures/next-costs.png', alt: 'What McDonald’s Next costs per restaurant' },
-		20: { src: 'figures/revenue-profit.png', alt: 'McDonald’s revenue and profit, 2025 to 2027 estimates' },
-		22: { src: 'figures/intel-vs-mcdonalds.png', alt: 'Intel vs. McDonald’s: percent change in share price since Dec. 31, 2025' }
+	const FIGURES: Record<number, { src: string; w: number; h: number; alt: string }> = {
+		2: { src: 'figures/chicken-vs-beef.png', w: 588, h: 356, alt: 'Chicken vs. beef: size of each fast-food category, with McDonald’s share' },
+		8: { src: 'figures/next-costs.png', w: 1600, h: 1120, alt: 'What McDonald’s Next costs per restaurant' },
+		20: { src: 'figures/revenue-profit.png', w: 999, h: 542, alt: 'McDonald’s revenue and profit, 2025 to 2027 estimates' },
+		22: { src: 'figures/intel-vs-mcdonalds.png', w: 827, h: 532, alt: 'Intel vs. McDonald’s: percent change in share price since Dec. 31, 2025' }
 	};
 
 	let active = $state(0);
@@ -84,6 +84,10 @@
 	}
 	$effect(() => {
 		update();
+		// re-check when the page reflows (fonts, images, window size) without a scroll
+		const ro = new ResizeObserver(onScroll);
+		ro.observe(document.body);
+		return () => ro.disconnect();
 	});
 </script>
 
@@ -112,7 +116,7 @@
 			{#if i > 0}
 				<p class:on={active === i} bind:this={paras[i - 1]}>{p}</p>
 				{#if FIGURES[i]}
-					<figure class="fig"><img src={FIGURES[i].src} alt={FIGURES[i].alt} loading="lazy" /></figure>
+					<figure class="fig"><img src={FIGURES[i].src} width={FIGURES[i].w} height={FIGURES[i].h} alt={FIGURES[i].alt} loading="lazy" /></figure>
 				{/if}
 			{/if}
 		{/each}

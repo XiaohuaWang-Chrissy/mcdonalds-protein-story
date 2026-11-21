@@ -9,7 +9,9 @@ export default defineConfig({
 				runes: ({ filename }) =>
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
-			adapter: adapter()
+			adapter: adapter(),
+			// GitHub Pages serves the site from /<repo-name>; set by the deploy workflow
+			paths: { base: (process.env.BASE_PATH ?? '') as '' | `/${string}` }
 		})
 	]
 });
