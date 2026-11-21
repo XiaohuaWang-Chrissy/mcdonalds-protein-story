@@ -7,18 +7,18 @@
 
 	// Events on the timeline. `para` = the paragraph that first mentions it.
 	const EVENTS = [
-		{ para: 1, i0: idx('2026-09-23'), label: 'Sept. 23: NEXT plan detailed at investor day' },
-		{ para: 4, i0: idx('2026-10-01'), i1: idx('2026-10-31'), label: 'October: Dublin pilot announced' },
-		{ para: 14, i0: idx('2026-04-01'), i1: idx('2026-04-30'), label: 'April: protein labels on 17 items' },
-		{ para: 17, i0: idx('2026-04-20'), i1: idx('2026-04-30'), label: 'Late April: 10 items under $3, deals dropped' },
-		{ para: 20, i0: idx('2026-07-01'), i1: idx('2026-09-30'), label: 'Q3: revenue +1%, net income +9%' },
-		{ para: 21, i0: idx('2026-10-07'), color: '#2b6cb0', label: 'Oct. 7: 2026 low' },
-		{ para: 21, i0: idx('2026-11-16'), i1: last, label: 'Week ended Nov. 20' },
-		{ para: 22, i0: idx('2026-10-02'), price: 233.59, color: '#2e9e44', label: 'Oct. 2: Yi buys at $233.59' },
-		{ para: 23, i0: idx('2026-11-06'), price: 278.79, color: '#DA291C', label: 'Nov. 6: Yi sells at $278.79' }
+		{ para: 2, i0: idx('2026-09-23'), label: 'Sept. 23: NEXT plan detailed at investor day' },
+		{ para: 5, i0: idx('2026-10-01'), i1: idx('2026-10-31'), label: 'October: Dublin pilot announced' },
+		{ para: 15, i0: idx('2026-04-01'), i1: idx('2026-04-30'), label: 'April: protein labels on 17 items' },
+		{ para: 18, i0: idx('2026-04-20'), i1: idx('2026-04-30'), label: 'Late April: 10 items under $3, deals dropped' },
+		{ para: 21, i0: idx('2026-07-01'), i1: idx('2026-09-30'), label: 'Q3: revenue +1%, net income +9%' },
+		{ para: 22, i0: idx('2026-10-07'), color: '#2b6cb0', label: 'Oct. 7: 2026 low' },
+		{ para: 22, i0: idx('2026-11-16'), i1: last, label: 'Week ended Nov. 20' },
+		{ para: 23, i0: idx('2026-10-02'), price: 233.59, color: '#2e9e44', label: 'Oct. 2: Yi buys at $233.59' },
+		{ para: 24, i0: idx('2026-11-06'), price: 278.79, color: '#DA291C', label: 'Nov. 6: Yi sells at $278.79' }
 	];
 	// spans that a later, overlapping span replaces
-	const HIDE_AFTER: Record<number, number> = { 14: 17, 20: 21 };
+	const HIDE_AFTER: Record<number, number> = { 15: 18, 21: 22 };
 
 	// For each paragraph: where the playhead sits and which slice of the year the chart zooms to.
 	const FULL: View = { from: 0, to: last, mode: 'pct' };
@@ -31,25 +31,26 @@
 
 	const STEPS: [string, View][] = [
 		['2026-11-20', FULL], // 0 headline
-		['2026-09-23', NEXT], ['2026-09-23', NEXT], ['2026-09-23', NEXT], // 1–3 NEXT plan, chicken
-		['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], // 4–7 Dublin pilot, costs
-		['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], // 8–11
-		['2026-10-01', OCT], ['2026-10-01', OCT], // 12–13 Yi intro
-		['2026-04-01', APR], ['2026-04-01', APR], ['2026-04-01', APR], // 14–16 protein labels
-		['2026-04-27', LATE_APR], ['2026-04-27', LATE_APR], ['2026-04-27', LATE_APR], // 17–19 value menu
-		['2026-09-30', FULL_USD], // 20 analysts, Q3
-		['2026-11-20', FULL], // 21 vs S&P 500
-		['2026-10-02', YI], // 22 Yi buys
-		['2026-11-06', YI], // 23 Yi sells
-		['2026-11-20', YI] // 24
+		['2026-11-20', FULL], // 1 lede
+		['2026-09-23', NEXT], ['2026-09-23', NEXT], ['2026-09-23', NEXT], // 2–4 NEXT plan, chicken
+		['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], // 5–8 Dublin pilot, costs
+		['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], ['2026-10-01', OCT], // 9–12
+		['2026-10-01', OCT], ['2026-10-01', OCT], // 13–14 Yi intro
+		['2026-04-01', APR], ['2026-04-01', APR], ['2026-04-01', APR], // 15–17 protein labels
+		['2026-04-27', LATE_APR], ['2026-04-27', LATE_APR], ['2026-04-27', LATE_APR], // 18–20 value menu
+		['2026-09-30', FULL_USD], // 21 analysts, Q3
+		['2026-11-20', FULL], // 22 vs S&P 500
+		['2026-10-02', YI], // 23 Yi buys
+		['2026-11-06', YI], // 24 Yi sells
+		['2026-11-20', YI] // 25
 	];
 
 	// Charts embedded in the article, shown after the given paragraph.
 	const FIGURES: Record<number, { src: string; w: number; h: number; alt: string }> = {
-		2: { src: 'figures/chicken-vs-beef.png', w: 588, h: 356, alt: 'Chicken vs. beef: size of each fast-food category, with McDonald’s share' },
-		8: { src: 'figures/next-costs.png', w: 1600, h: 1120, alt: 'What McDonald’s Next costs per restaurant' },
-		20: { src: 'figures/revenue-profit.png', w: 999, h: 542, alt: 'McDonald’s revenue and profit, 2025 to 2027 estimates' },
-		22: { src: 'figures/intel-vs-mcdonalds.png', w: 827, h: 532, alt: 'Intel vs. McDonald’s: percent change in share price since Dec. 31, 2025' }
+		3: { src: 'figures/chicken-vs-beef.png', w: 588, h: 356, alt: 'Chicken vs. beef: size of each fast-food category, with McDonald’s share' },
+		9: { src: 'figures/next-costs.png', w: 1600, h: 1120, alt: 'What McDonald’s Next costs per restaurant' },
+		21: { src: 'figures/revenue-profit.png', w: 999, h: 542, alt: 'McDonald’s revenue and profit, 2025 to 2027 estimates' },
+		23: { src: 'figures/intel-vs-mcdonalds.png', w: 827, h: 532, alt: 'Intel vs. McDonald’s: percent change in share price since Dec. 31, 2025' }
 	};
 
 	let active = $state(0);
@@ -69,7 +70,7 @@
 	let ticking = false;
 	function update() {
 		ticking = false;
-		const line = chartBar.getBoundingClientRect().bottom + Math.min(120, window.innerHeight * 0.15);
+		const line = chartBar.getBoundingClientRect().bottom + Math.min(48, window.innerHeight * 0.06);
 		let next = 0;
 		paras.forEach((el, i) => {
 			if (el && el.getBoundingClientRect().top <= line) next = i + 1;

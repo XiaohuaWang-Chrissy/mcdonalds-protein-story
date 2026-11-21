@@ -37,6 +37,27 @@ for old, new in EDITS:
         paras[hits[0]] = paras[hits[0]].replace(old, new, 1)
     elif not any(new in p for p in paras):
         print('WARNING: edit not applied, text not found:', old[:60])
+# Sentences that should stand as their own paragraph.
+SPLITS = [
+    'McDonald’s wants to remodel its restaurants and become a place where people go when they’re trying to eat less but still want protein.',
+]
+for sentence in SPLITS:
+    for i, p in enumerate(paras):
+        if p.startswith(sentence + ' '):
+            paras[i:i + 1] = [sentence, p[len(sentence) + 1:]]
+            break
+
+# Curly quotes throughout: apostrophes inside words -> ’, any straight double quotes -> “ ”.
+def curly(t):
+    t = re.sub(r"(?<=\w)'(?=\w)", '’', t)
+    t = re.sub(r'(^|[\s(\[])"', r'\1“', t)
+    t = t.replace('"', '”')
+    leftover = re.findall(r".{0,10}'.{0,10}", t)
+    if leftover:
+        print('WARNING: straight single quote left:', leftover)
+    return t
+paras = [curly(p) for p in paras]
+
 json.dump(paras, open('src/lib/data/story.json', 'w'), ensure_ascii=False, indent=1)
 
 # ---- figures embedded in the PDF ----
